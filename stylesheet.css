@@ -1,0 +1,417 @@
+/* SDVS dark theme */
+:root {
+  --orange: orange; 
+  --dark-bg: #121212;
+  --header-bg: #1e1e1e;
+}
+
+body {
+  margin: 0;
+  color: white;
+  font-family: Arial, sans-serif;
+  background: #151515; /* darker at edges */
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main, section {
+  background: var(--dark-bg);
+  flex: 1;
+}
+
+/* header styles */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  line-height: 50px;
+  font-size: 25px;
+  background: var(--header-bg);
+  font-family: Arial, sans-serif;
+  padding: 0 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border-bottom: 1px solid #333;
+  z-index: 100;
+}
+
+header * {
+  display: inline;
+  height: 50px;
+  color: white;
+}
+
+header img {
+  filter: brightness(1.1);
+}
+
+.logout-link {
+  margin-left: auto; 
+}
+
+.logout-link ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logout-link ul li {
+  display: inline;
+  margin-left: 20px;
+}
+
+.logout-link ul li a, header a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.logout-link a:hover, header a:hover {
+  color: var(--orange);
+}
+
+section {
+  margin-top: 60px;
+  padding: 10px 20px;
+  text-align: center;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.feature-list {
+  list-style: none;
+  margin-bottom: 40px;
+  display: inline-block;
+  text-align: left;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1.15rem;
+}
+
+.check-icon {
+  color: var(--orange);
+  margin-right: 20px;
+  font-size: 1.2rem;
+}
+
+#Login, #PINForm {
+  padding: 10px 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* form elements */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: white;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  border-color: var(--orange);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 133, 34, 0.3);
+}
+
+input[type=button], .cta-button, .access-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-decoration: none; 
+  color: black;
+  background: var(--orange);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.access-btn {
+  padding: 12px 50px;
+  font-size: 1.1rem;
+}
+
+input[type=button]:hover, .cta-button:hover, .access-btn:hover {
+  background: darkorange;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  color: #bbb;
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+h1 {
+  color: var(--orange);
+  margin-bottom: 15px;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+h2 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+h4 {
+  color: #aaa;
+  margin: 5px 0 15px 0;
+  font-weight: normal;
+  font-size: 14px;
+  text-align: center;
+}
+
+.toggle-form {
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: center;
+  color: #aaa;
+}
+
+.toggle-form a {
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.toggle-form a:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 10px;
+  text-align: left;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  color: #777;
+  background: #1a1a1a;
+  border: none;
+  box-shadow: none;
+}
+
+/* folders */
+.folder-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.folder {
+  display: inline-block;
+  text-align: center;
+  margin: 20px;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.folder:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.folder img {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.folder input[type="text"] {
+  border: none;
+  border-bottom: 2px solid var(--orange);
+  font-size: 16px;
+  text-align: center;
+  background: transparent;
+}
+
+.exit-link h4 {
+  margin-top: 40px;
+  font-size: 20px;
+}
+
+.exit-link a {
+  text-decoration: none;
+  color: var(--orange);
+  font-weight: bold;
+}
+
+.exit-link a:hover {
+  text-decoration: underline;
+}
+
+main h1 {
+  color: orange;
+}
+
+main button {
+  padding: 10px 20px;
+  background: var(--orange);
+  color: black;
+  border: none;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+main button:hover {
+  background: darkorange;
+}
+
+.pin-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pin-digit {
+  width: 45px;
+  height: 55px;
+  font-size: 24px;
+  text-align: center;
+  border: 2px solid #444;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.pin-digit:focus {
+  border-color: var(--orange);
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 133, 34, 0.4);
+}
+
+/* mobile adjustments */
+@media (max-width: 768px) {
+  section {
+    padding: 10px;
+  }
+  
+  .folder {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .folder img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+    margin-bottom: 30px;
+  }
+  
+  .feature-item {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0 10px;
+    height: 50px;
+    line-height: 40px;
+  }
+  
+  header * {
+    height: 40px;
+  }
+  
+  .folder-container {
+    flex-direction: column;
+  }
+  
+  .folder {
+    width: 100%;
+    max-width: 250px;
+    margin: 10px auto;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-height: 650px) {
+  h1 {
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    margin-bottom: 25px;
+  }
+  
+  .feature-item {
+    margin-bottom: 10px;
+  }
+  
+  .feature-list {
+    margin-bottom: 25px;
+  }
+}
