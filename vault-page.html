@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Data Vault Systems</title>
+	
+	<!-- css -->
+    <link rel="stylesheet" href="stylesheet.css">
+    
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+		<a href="home.html">
+            <img src="SDVS-logo.png" style="height:100%">
+		</a>
+        </div>
+	
+        <nav class="logout-link">
+            <ul>
+                <li><a href="index.html">Log out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <div>
+            <h1>Your Vault</h1>
+			<p>Welcome to Your Vault, here you can upload, delete and download files</p>
+        </div>
+        <div class="folder-container" id="folderContainer">
+            <!-- folders get added here -->
+        </div>
+        <div class="exit-link">
+            <h4><a href="home.html">Exit Vault</a></h4>
+        </div>
+    </section>
+    
+    <footer>
+        &copy; 2024 Secure Data Vault Systems.
+    </footer>
+    
+    <script>
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            
+            loadFolders();
+        };
+
+        function loadFolders() {
+            const user = localStorage.getItem('currentUser');
+            const folders = JSON.parse(localStorage.getItem(`${user}_folders`) || '[]');
+            
+            const container = document.getElementById('folderContainer');
+            container.innerHTML = ''; 
+            
+            if (folders.length === 0) {
+                folders.push(
+                    { id: 'folder-1', name: 'New Folder 1', link: 'folder-1-location.html' },
+                    { id: 'folder-2', name: 'New Folder 2', link: 'folder-2-location.html' },
+                    { id: 'folder-3', name: 'New Folder 3', link: 'folder-3-location.html' }
+                );
+                
+                localStorage.setItem(`${user}_folders`, JSON.stringify(folders));
+            }
+            
+            folders.forEach(folder => {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'folder';
+                folderDiv.innerHTML = `
+                    <img src="orange-folder.png" alt="${folder.name}" onclick="openFolder('${folder.link}')">
+                    <input type="text" value="${folder.name}" 
+                           data-id="${folder.id}" 
+                           onfocus="disableClick(event)" 
+                           onblur="renameFolder(this)">
+                `;
+                container.appendChild(folderDiv);
+            });
+        }
+
+        function openFolder(page) {
+            window.location.href = page;
+        }
+
+        function renameFolder(input) {
+            const newName = input.value.trim();
+            const id = input.getAttribute('data-id');
+            
+            if (newName === '') {
+                alert('Folder name cannot be empty');
+                input.value = input.defaultValue;
+                return;
+            }
+            
+            const user = localStorage.getItem('currentUser');
+            const folders = JSON.parse(localStorage.getItem(`${user}_folders`) || '[]');
+            
+            const folder = folders.find(f => f.id === id);
+            if (folder) {
+                folder.name = newName;
+                
+                localStorage.setItem(`${user}_folders`, JSON.stringify(folders));
+                input.defaultValue = newName;
+                
+                console.log('Renamed folder to: ' + newName);
+            }
+        }
+
+        function disableClick(event) {
+            event.stopPropagation();
+        }
+    </script>
+</body>
+</html>
