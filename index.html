@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Data Vault Systems</title>
+    
+    <!-- css -->
+    <link rel="stylesheet" href="stylesheet.css">
+    
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .login-container {
+            background: transparent;
+            box-shadow: none;
+        }
+        
+        input[type=button] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <img src="SDVS-logo.png" style="height:100%">
+        </div>
+    </header>
+    <section>
+        <div id="loginContainer" class="login-container">
+            <h1>Login</h1>
+            <h4>Enter your credentials to continue</h4>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="Username">Username</label>
+                    <input type="text" id="Username" name="Username" placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="Password">Password</label>
+                    <input type="password" id="Password" name="Password" placeholder="Enter your password">
+                </div>
+                
+                <input type="button" value="LOGIN" onclick="validateLogin()">
+            </form>
+            
+            <div class="toggle-form">
+                New user? <a href="#" onclick="showRegisterForm()">Create account</a>
+            </div>
+            
+            <div id="errorMessages" class="error"></div>
+        </div>
+		
+		<div class="device-notice" style="text-align: center; margin-top: 20px; font-size: 13px; color: #999;">
+			Note: SDVS was built for a university project. All data is stored locally on your device.
+		</div>
+        
+        <div id="registerContainer" class="login-container" style="display:none;">
+            <h1>Create Account</h1>
+            <h4>Set up your secure vault access</h4>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="newUsername">Username</label>
+                    <input type="text" id="newUsername" name="newUsername" placeholder="Choose a username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Create a password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+                </div>
+                
+                <input type="button" value="REGISTER" onclick="registerUser()">
+            </form>
+            
+            <div class="toggle-form">
+                Already registered? <a href="#" onclick="showLoginForm()">Sign in</a>
+            </div>
+            
+            <div id="registerError" class="error"></div>
+        </div>
+    </section>
+    <footer>
+        &copy; 2024 Secure Data Vault Systems.
+    </footer>
+
+    <script>
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser');
+            if (user && document.getElementById("Username")) {
+                document.getElementById("Username").value = user;
+            }
+        };
+
+        function showRegisterForm() {
+			document.getElementById("loginContainer").style.display = "none";
+			document.getElementById("registerContainer").style.display = "block";
+    
+			// Hide the notice
+			const noticeElement = document.querySelector('.device-notice');
+			if (noticeElement) {
+				noticeElement.style.display = 'none';
+			}
+		}
+
+		function showLoginForm() {
+			document.getElementById("registerContainer").style.display = "none";
+			document.getElementById("loginContainer").style.display = "block";
+    
+			const noticeElement = document.querySelector('.device-notice');
+			if (noticeElement) {
+			noticeElement.style.display = 'block';
+			}
+		}
+
+        // basic hash function (not secure for real use)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // 32bit int
+            }
+            return hash.toString(16);
+        }
+
+        function registerUser() {
+            document.getElementById("registerError").innerHTML = "";
+            
+            const username = document.getElementById("newUsername").value;
+            const password = document.getElementById("newPassword").value;
+            const confirm = document.getElementById("confirmPassword").value;
+            
+            if (username === "" || password === "" || confirm === "") {
+                document.getElementById("registerError").innerHTML = "All fields are required";
+                return;
+            }
+            
+            if (password !== confirm) {
+                document.getElementById("registerError").innerHTML = "Passwords do not match";
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            if (users[username]) {
+                document.getElementById("registerError").innerHTML = "Username already exists";
+                return;
+            }
+            
+            const hashedPwd = simpleHash(password);
+            
+            users[username] = {
+                username: username,
+                passwordHash: hashedPwd
+            };
+            
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert("Registration successful! Please login.");
+            showLoginForm();
+        }
+
+        function validateLogin() {
+            document.getElementById("errorMessages").innerHTML = "";
+            
+            const username = document.getElementById("Username").value;
+            const password = document.getElementById("Password").value;
+            
+            if (username === "" || password === "") {
+                document.getElementById("errorMessages").innerHTML = "You must enter your Username/Password";
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const user = users[username];
+            
+            if (!user || user.passwordHash !== simpleHash(password)) {
+                document.getElementById("errorMessages").innerHTML = "Invalid username or password";
+                return;
+            }
+            
+            localStorage.setItem('currentUser', username);
+            window.location.href = "home.html";
+        }
+    </script>
+</body>
+</html>
