@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Data Vault Systems</title>
+    
+    <!-- css -->
+    <link rel="stylesheet" href="stylesheet.css">
+    
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #createPinContainer {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <a href="home.html">
+                <img src="SDVS-logo.png" style="height:100%">
+            </a>
+        </div>
+	
+        <div>
+            <a href="index.html" onclick="logout()">Log out</a>
+        </div>
+    </header>
+
+    <section>
+        <div id="pinEntryContainer">
+            <h1 id="pin-title">Enter Your PIN</h1>
+            <h4 id="pin-subtitle">Please enter your PIN to access your vault</h4>
+            
+            <form id="PINForm">
+                <label for="PIN">PIN:</label>
+                <input type="password" id="PIN" name="PIN" maxlength="5" placeholder="Enter your 5-digit PIN">
+                <br>
+                <br>
+                <input type="button" value="Submit" onclick="validatePin()">
+            </form>
+            
+            <div class="toggle-form">
+                <a href="#" onclick="showCreatePinForm()">Create/Reset PIN</a>
+            </div>
+            
+            <div id="pin-error" class="error"></div>
+        </div>
+        
+        <div id="createPinContainer">
+            <h1>Create New PIN</h1>
+            <h4>Enter a new 5-digit PIN for your vault</h4>
+            
+            <form id="CreatePINForm">
+                <label for="NewPIN">New PIN:</label>
+                <input type="password" id="NewPIN" name="NewPIN" maxlength="5" placeholder="Enter a 5-digit PIN">
+                
+                <label for="ConfirmPIN">Confirm PIN:</label>
+                <input type="password" id="ConfirmPIN" name="ConfirmPIN" maxlength="5" placeholder="Confirm your 5-digit PIN">
+                
+                <br>
+                <br>
+                <input type="button" value="Create PIN" onclick="createNewPin()">
+            </form>
+            
+            <div class="toggle-form">
+                <a href="#" onclick="showPinEntryForm()">Back to PIN Entry</a>
+            </div>
+            
+            <div id="create-pin-error" class="error"></div>
+        </div>
+    </section>
+
+    <footer>
+        © 2024 Secure Data Vault Systems.
+    </footer>
+
+    <script>
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            
+            checkPin();
+            document.getElementById('PIN').focus();
+        };
+        
+        function showCreatePinForm() {
+            document.getElementById('pinEntryContainer').style.display = 'none';
+            document.getElementById('createPinContainer').style.display = 'block';
+            document.getElementById('NewPIN').focus();
+        }
+        
+        function showPinEntryForm() {
+            document.getElementById('createPinContainer').style.display = 'none';
+            document.getElementById('pinEntryContainer').style.display = 'block';
+            document.getElementById('PIN').focus();
+        }
+        
+        function checkPin() {
+            const username = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const user = users[username];
+            
+            if (user && !user.pin) {
+                document.getElementById('pin-title').textContent = "Create Your PIN";
+                document.getElementById('pin-subtitle').textContent = "Please create a 5-digit PIN to secure your vault";
+            }
+        }
+        
+        function createNewPin() {
+            document.getElementById('create-pin-error').innerHTML = "";
+            
+            const newPin = document.getElementById('NewPIN').value;
+            const confirmPin = document.getElementById('ConfirmPIN').value;
+            
+            // Check PIN format
+            if (newPin.length !== 5) {
+                document.getElementById('create-pin-error').innerHTML = "PIN must be exactly 5 digits";
+                return;
+            }
+            
+            if (!/^\d+$/.test(newPin)) {
+                document.getElementById('create-pin-error').innerHTML = "PIN must contain only digits";
+                return;
+            }
+            
+            if (newPin !== confirmPin) {
+                document.getElementById('create-pin-error').innerHTML = "PINs do not match";
+                return;
+            }
+            
+            const username = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const user = users[username];
+            
+            if (!user) {
+                logout();
+                return;
+            }
+            
+            user.pin = newPin;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert("PIN created successfully!");
+            showPinEntryForm();
+        }
+        
+        function validatePin() {
+            document.getElementById('pin-error').innerHTML = "";
+            
+            const pin = document.getElementById('PIN').value;
+            
+            if (pin.length !== 5) {
+                document.getElementById('pin-error').innerHTML = "PIN must be exactly 5 digits";
+                return;
+            }
+            
+            if (!/^\d+$/.test(pin)) {
+                document.getElementById('pin-error').innerHTML = "PIN must contain only digits";
+                return;
+            }
+            
+            const username = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const user = users[username];
+            
+            if (!user) {
+                logout();
+                return;
+            }
+            
+            if (!user.pin) {
+                // First time PIN setup
+                user.pin = pin;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                alert("PIN created successfully!");
+                window.location.href = "vault.html";
+            } else {
+                if (user.pin === pin) {
+                    window.location.href = "vault-page.html";
+                } else {
+                    document.getElementById('pin-error').innerHTML = "Incorrect PIN";
+                    document.getElementById('PIN').value = "";
+                    document.getElementById('PIN').focus();
+                }
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
